@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     EditText groupName,groupCnt,resultName,resultCnt;
@@ -35,6 +36,16 @@ public class MainActivity extends AppCompatActivity {
                 sqlDb=myhelper.getWritableDatabase();
                 myhelper.onUpgrade(sqlDb,1,2);
                 sqlDb.close();
+            }
+        });
+        insert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sqlDb=myhelper.getWritableDatabase();
+                String sql="insert into idolTable values('"+groupName.getText()+"',"+groupCnt.getText()+")";
+                sqlDb.execSQL(sql);
+                sqlDb.close();
+                Toast.makeText(MainActivity.this,"저장됨",Toast.LENGTH_LONG).show();
             }
         });
     }
