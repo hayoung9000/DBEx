@@ -55,30 +55,35 @@
         >
         <Button
             android:id="@+id/but_init"
+            android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="초기화"
             />
         <Button
             android:id="@+id/but_insert"
+            android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="입력"
             />
         <Button
             android:id="@+id/but_select"
+            android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="조회"
             />
         <Button
             android:id="@+id/but_update"
+            android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="수정"
             />
         <Button
             android:id="@+id/but_delete"
+            android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="삭제"
@@ -91,7 +96,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center"
-        android:background="#84b1ff"
+        android:background="#1943ff"
         >
         <EditText
             android:id="@+id/edit_result_name"
@@ -99,6 +104,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:lines="13"
+            android:textColor="#210da3"
             android:enabled="false"
             />
         <EditText
@@ -107,6 +113,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:lines="13"
+            android:textColor="#210da3"
             android:enabled="false"
             />
     </LinearLayout>

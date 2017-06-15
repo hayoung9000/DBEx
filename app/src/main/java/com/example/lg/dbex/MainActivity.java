@@ -17,6 +17,20 @@ public class MainActivity extends AppCompatActivity {
     Button init,insert,select,update,delete;
     MyDBHelper myhelper;
     SQLiteDatabase sqlDb;
+    public void list(){
+        sqlDb=myhelper.getReadableDatabase();
+        String sql="select * from idolTable";
+        Cursor cursor =sqlDb.rawQuery(sql,null);
+        String names="Idol 이름"+"\r\n"+"================="+"\r\n";
+        String counts="Idol 인원수"+"\r\n"+"================="+"\r\n";
+        while(cursor.moveToNext()){ //데이터 행의 갯수만큼 반복
+            names += cursor.getString(0)+"\r\n";
+            counts += cursor.getInt(1)+"\r\n";; //getString도 가능하지만 나중에 연산이 필요한 경우가 있을 수 있기 때문에 getInt 사용
+        }
+        resultName.setText(names);
+        resultCnt.setText(counts);
+        cursor.close();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         delete=(Button)findViewById(R.id.but_delete);
 
         myhelper=new MyDBHelper(this);
+        list();
         //기존의 테이블이 존재하면 삭제한 테이블을 새로 생성한다
         init.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -41,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
                 sqlDb.close();
             }
         });
+
         insert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -49,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
                 sqlDb.execSQL(sql);
                 sqlDb.close();
                 Toast.makeText(MainActivity.this,"저장됨",Toast.LENGTH_LONG).show();
+                list();
             }
         });
         select.setOnClickListener(new View.OnClickListener() {
@@ -56,17 +73,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 sqlDb=myhelper.getReadableDatabase();
                 String sql="select * from idolTable";
-                Cursor cursor =sqlDb.rawQuery(sql,null);
-                String names="Idol 이름"+"\r\n"+"================="+"\r\n";
-                String counts="Idol 인원수"+"\r\n"+"================="+"\r\n";
-                while(cursor.moveToNext()){ //데이터 행의 갯수만큼 반복
-                    names += cursor.getString(0)+"\r\n";
-                    counts += cursor.getInt(1); //getString도 가능하지만 나중에 연산이 필요한 경우가 있을 수 있기 때문에 getInt 사용
-                }
-                resultName.setText(names);
-                resultCnt.setText(counts);
-                cursor.close();
                 sqlDb.close();
+                list();
             }
         });
         update.setOnClickListener(new View.OnClickListener() {
@@ -78,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
                 sqlDb.execSQL(sql);
                 sqlDb.close();
                 Toast.makeText(MainActivity.this,"인원수가 수정됨",Toast.LENGTH_LONG).show();
+                list();
             }
         });
         delete.setOnClickListener(new View.OnClickListener() {
@@ -85,11 +94,11 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 sqlDb=myhelper.getWritableDatabase();
                 String sql="delete from idolTable where idolName='"+groupName.getText()+"'";
-                //delete(삭제)delete from 학생 where stuid='~'
                 sqlDb=myhelper.getReadableDatabase();
                 sqlDb.execSQL(sql);
                 sqlDb.close();
                 Toast.makeText(MainActivity.this,"삭제됨",Toast.LENGTH_LONG).show();
+                list();
             }
         });
     }
