@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     EditText groupName,groupCnt,resultName,resultCnt;
-    Button init,insert,select,reset;
+    Button init,insert,select,update;
     MyDBHelper myhelper;
     SQLiteDatabase sqlDb;
     @Override
@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         init=(Button)findViewById(R.id.but_init);
         insert=(Button)findViewById(R.id.but_insert);
         select=(Button)findViewById(R.id.but_select);
-       reset=(Button)findViewById(R.id.but_reset);
+        update=(Button)findViewById(R.id.but_update);
 
         myhelper=new MyDBHelper(this);
         //기존의 테이블이 존재하면 삭제한 테이블을 새로 생성한다
@@ -68,11 +68,15 @@ public class MainActivity extends AppCompatActivity {
                 sqlDb.close();
             }
         });
-        reset.setOnClickListener(new View.OnClickListener() {
+        update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sqlDb=myhelper.getWritableDatabase();
+                String sql="update idolTable set idolCount="+groupCnt.getText()+" where idolName='"+groupName.getText()+"'";
                 sqlDb=myhelper.getReadableDatabase();
-               // String sql="update idolTable set idolCount=; //일치할때만업데이트
+                sqlDb.execSQL(sql);
+                sqlDb.close();
+                Toast.makeText(MainActivity.this,"인원수가 수정됨",Toast.LENGTH_LONG).show();
             }
         });
     }
