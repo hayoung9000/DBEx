@@ -1,6 +1,7 @@
 package com.example.lg.dbex;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.v7.app.AppCompatActivity;
@@ -13,7 +14,7 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     EditText groupName,groupCnt,resultName,resultCnt;
-    Button init,insert,select;
+    Button init,insert,select,reset;
     MyDBHelper myhelper;
     SQLiteDatabase sqlDb;
     @Override
@@ -27,9 +28,10 @@ public class MainActivity extends AppCompatActivity {
         init=(Button)findViewById(R.id.but_init);
         insert=(Button)findViewById(R.id.but_insert);
         select=(Button)findViewById(R.id.but_select);
+       reset=(Button)findViewById(R.id.but_reset);
 
         myhelper=new MyDBHelper(this);
-        //기존의 테이블이 존재하면 삭제학 테이블을 새로 생성한다
+        //기존의 테이블이 존재하면 삭제한 테이블을 새로 생성한다
         init.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -48,7 +50,33 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this,"저장됨",Toast.LENGTH_LONG).show();
             }
         });
+        select.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sqlDb=myhelper.getReadableDatabase();
+                String sql="select * from idolTable";
+                Cursor cursor =sqlDb.rawQuery(sql,null);
+                String names="Idol 이름"+"\r\n"+"================="+"\r\n";
+                String counts="Idol 인원수"+"\r\n"+"================="+"\r\n";
+                while(cursor.moveToNext()){ //데이터 행의 갯수만큼 반복
+                    names += cursor.getString(0)+"\r\n";
+                    counts += cursor.getInt(1); //getString도 가능하지만 나중에 연산이 필요한 경우가 있을 수 있기 때문에 getInt 사용
+                }
+                resultName.setText(names);
+                resultCnt.setText(counts);
+                cursor.close();
+                sqlDb.close();
+            }
+        });
+        reset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sqlDb=myhelper.getReadableDatabase();
+               // String sql="update idolTable set idolCount=; //일치할때만업데이트
+            }
+        });
     }
+
     class MyDBHelper extends SQLiteOpenHelper{
         // idolDB라는 이름의 데이터베이스가 생성된다
         public MyDBHelper(Context context) {
@@ -63,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
         //이미 idolTable이 존재한다면 기존의 테이블을 삭제하고 새로 테이블을 만들 때
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            String sql="drop table f exist idolTable";
+            String sql="drop table if exists idolTable";
             db.execSQL(sql);
             onCreate(db);
         }
